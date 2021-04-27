@@ -5,6 +5,10 @@
         "tick",
         "render",
         "player",
-        "particle"
+        "particle",
+        "runAnimations"
+    ],
+    "cSpell.words": [
+        "bbmodel"
     ]
 }
