@@ -4,6 +4,7 @@
         "model",
         "tick",
         "render",
-        "player"
+        "player",
+        "particle"
     ]
 }

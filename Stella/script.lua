@@ -4,6 +4,7 @@
 -- |___/ |_| |___|____|____/_/ \_\
 --
 -- Figura Character for KodingDev
+--
 -- Blinking Settings
 BLINK_MIN_DELAY = 5
 BLINK_CHANCE = 0.1
@@ -13,8 +14,8 @@ BLINK_TEXTURE_OFFSET_X = 64
 BLINK_TEXTURE_AMOUNT = 4
 
 -- General settings
-TEXTURE_WIDTH = 128
-TEXTURE_HEIGHT = 64
+TEXTURE_WIDTH = 64
+TEXTURE_HEIGHT = 80
 
 -- Variables
 TICK_COUNT = 0
@@ -55,7 +56,8 @@ local animations = {
     -- Crying
     [1] = {
         criteria = function()
-            return player.getRot()[1] > 30 and player.getAnimation() == 'CROUCHING';
+            return player.getRot()[1] > 30 and player.getAnimation() ==
+                       'CROUCHING';
         end,
         every = 4,
         priority = -1,
@@ -63,7 +65,8 @@ local animations = {
             local player = player.getPos()
             for _ = 1, 2 do
                 particle.addParticle("rain", {
-                    player.x + math.random(-0.3, 0.3), player.y + 2, player.z + math.random(-0.3, 0.3), 0, 0, 0
+                    player.x + math.random(-0.3, 0.3), player.y + 2,
+                    player.z + math.random(-0.3, 0.3), 0, 0, 0
                 })
             end
         end,
