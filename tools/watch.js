@@ -20,45 +20,48 @@ const watcher = chokidar.watch(sources, {
 });
 
 const getDirectives = (script) => {
-  let result;
-  let matches = {};
+  let result,
+    matches = {};
   while ((result = directiveRegex.exec(script)))
     matches[result.groups.name] = result.groups.value || null;
   return matches;
 };
 
-// TODO: Clean this entire method up
 watcher.on("all", async (event, path) => {
   const start = Date.now();
   console.log(`${chalk.green("[EVENT]")} ${event}: ${path}`);
 
   if (/\.lua$/.test(path)) {
-    let directives = {};
-    const files = (await glob(`${sources}/**/*.lua`)).map((v) =>
-      v.split(sources).pop()
-    );
-
     const dependencies = new DepGraph();
-    files.forEach((v) => dependencies.addNode(v));
-    files.forEach((v) => {
-      const source = readFileSync(join(sources, v)).toString();
-      const items = getDirectives(source);
-      directives[v] = items;
+    const files = (await glob(`${sources}/**/*.lua`))
+      .map((v) => v.split(sources).pop())
+      .reduce((map, path) => {
+        const source = readFileSync(join(sources, path)).toString();
+        return {
+          ...map,
+          [path]: {
+            path: path,
+            source: source,
+            directives: getDirectives(source),
+          },
+        };
+      }, {});
 
-      if (!items.depends) return;
-      items.depends
-        .split(" ")
-        .forEach((dep) => dependencies.addDependency(v, `/${dep}.lua`));
+    Object.values(files).forEach((file) => dependencies.addNode(file.path));
+    Object.values(files).forEach((file) => {
+      if (file.directives.depends)
+        file.directives.depends
+          .split(" ")
+          .forEach((dep) =>
+            dependencies.addDependency(file.path, `/${dep}.lua`)
+          );
     });
 
     const script = dependencies
       .overallOrder()
-      .map(
-        (v) =>
-          `--- Source: ${v} ---\n${readFileSync(join(sources, v)).toString()}`
-      )
+      .map((path) => `--- Source: ${path} ---\n${files[path].source}`)
       .join("\n\n");
-    
+
     writeFileSync(output, script);
     console.log(
       `${chalk.blue("[BUILT]")} Took ${Date.now() - start}ms for ${

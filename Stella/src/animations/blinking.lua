@@ -31,6 +31,7 @@ local function blink_render(data)
 end
 
 BLINK_ANIMATION = {
+    name = "blink",
     data = {delay = 0, time = 0, blinking = false},
     every = 2,
     criteria = function() return true; end,

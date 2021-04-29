@@ -9,6 +9,7 @@ local function cryingTick()
 end
 
 CRYING_ANIMATION = {
+    name = "crying",
     criteria = function()
         return player.getRot()[1] > 30 and player.getAnimation() ==
                    'CROUCHING';

@@ -24,7 +24,7 @@ for _, value in pairs(vanilla_model) do value.setEnabled(false) end
 
 function tick()
     TICK_COUNT = TICK_COUNT + 1
-    runAnimations(true)
+    runAnimations(true, 0)
 end
 
-function render(_) runAnimations(false) end
+function render(delta) runAnimations(false, delta) end

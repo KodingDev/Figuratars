@@ -6,7 +6,8 @@
         "render",
         "player",
         "particle",
-        "runAnimations"
+        "runAnimations",
+        "lerp"
     ],
     "cSpell.words": [
         "bbmodel"
