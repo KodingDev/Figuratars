@@ -1,7 +1,7 @@
 const chokidar = require("chokidar");
 const chalk = require("chalk");
 const { question } = require("readline-sync");
-const { join } = require("path");
+const { join, sep } = require("path");
 const { readFileSync, writeFileSync } = require("fs");
 const { DepGraph } = require("dependency-graph");
 
@@ -11,7 +11,7 @@ const glob = promisify(require("glob"));
 const srcDirectory = "src";
 const directiveRegex = /^--! @(?<name>[A-Za-z]+)( (?<value>[A-Za-z0-9 \.\/]+))?$/gm;
 
-const directory = join("../", process.argv[2] || question("Enter an avatar: "));
+const directory = join("..", process.argv[2] || question("Enter an avatar: "));
 const output = join(directory, "script.lua");
 const sources = join(directory, srcDirectory);
 
@@ -33,8 +33,8 @@ watcher.on("all", async (event, path) => {
 
   if (/\.lua$/.test(path)) {
     const dependencies = new DepGraph();
-    const files = (await glob(`${sources}/**/*.lua`))
-      .map((v) => v.split(sources).pop())
+    const files = (await glob(`${sources}${sep}**${sep}*.lua`))
+      .map((v) => v.replace(/\//g, sep).split(sources).pop())
       .reduce((map, path) => {
         const source = readFileSync(join(sources, path)).toString();
         return {
@@ -53,7 +53,7 @@ watcher.on("all", async (event, path) => {
         file.directives.depends
           .split(" ")
           .forEach((dep) =>
-            dependencies.addDependency(file.path, `/${dep}.lua`)
+            dependencies.addDependency(file.path, `${sep}${dep.replace(/\//g, sep)}.lua`)
           );
     });
 
