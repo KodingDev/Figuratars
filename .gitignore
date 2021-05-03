@@ -1,3 +1,4 @@
 **/node_modules
 **/script.lua
+.idea/
 tools/yarn-error.log
