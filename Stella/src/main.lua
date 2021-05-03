@@ -1,4 +1,4 @@
---! @depends animation/controller
+--! @depends animation/controller hooks/controller
 
 -- General settings
 TEXTURE_WIDTH = 64
@@ -17,6 +17,6 @@ function tick()
     AnimationController:tick()
 end
 
-function render(delta)
+function render(_)
 
 end

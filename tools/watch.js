@@ -9,7 +9,7 @@ const { promisify } = require("util");
 const glob = promisify(require("glob"));
 
 const srcDirectory = "src";
-const directiveRegex = /^--! @(?<name>[A-Za-z]+)( (?<value>[A-Za-z0-9 \.\/]+))?$/gm;
+const directiveRegex = /^--! @(?<name>[A-Za-z]+)( (?<value>[A-Za-z0-9 .\/]+))?$/gm;
 
 const directory = join("..", process.argv[2] || question("Enter an avatar: "));
 const output = join(directory, "script.lua");
@@ -59,7 +59,7 @@ watcher.on("all", async (event, path) => {
 
     const script = dependencies
       .overallOrder()
-      .map((path) => `--- Source: ${path} ---\n${files[path].source}`)
+      .map((path) => `--- Source: ${path.replace(/\\/g, '/')} ---\n${files[path].source}`)
       .join("\n\n");
 
     writeFileSync(output, script);

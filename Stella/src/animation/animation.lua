@@ -1,3 +1,5 @@
+--! @depends hooks/controller
+
 UVAnimation = {
     tickRate = 1,
     frames = 1,
@@ -108,8 +110,12 @@ function Animation:new(o, hook, parts)
 end
 
 function Animation:tick()
-    -- TODO: Do hook check here
+    if not HookController.test(self.hook) then
+        return false
+    end
+
     for part, animation in pairs(self.parts) do
         animation:tick(part)
     end
+    return true
 end
