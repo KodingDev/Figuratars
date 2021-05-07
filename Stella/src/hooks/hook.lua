@@ -1,8 +1,14 @@
+---@class Hook
 Hook = {
     name = "",
-    criteria = function() end
+
+    ---@return boolean
+    criteria = function()
+    end
 }
 
+---@param name string
+---@param criteria function
 function Hook:new(o, name, criteria)
     o = o or {}
     setmetatable(o, self)

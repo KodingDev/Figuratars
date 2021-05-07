@@ -1,5 +1,6 @@
 --! @depends hooks/controller
 
+---@class UVAnimation
 UVAnimation = {
     tickRate = 1,
     frames = 1,
@@ -10,6 +11,12 @@ UVAnimation = {
     data = { last = 0 }
 }
 
+---@param start table
+---@param increment table
+---@param frames number
+---@param delay number
+---@param chance number
+---@param tickRate number
 function UVAnimation:new(o, start, increment, frames, delay, chance, tickRate)
     o = o or {}
     setmetatable(o, self)
@@ -26,6 +33,7 @@ function UVAnimation:new(o, start, increment, frames, delay, chance, tickRate)
     return o
 end
 
+---@param part CustomModelPart
 function UVAnimation:tick(part)
     if TICK_COUNT % self.tickRate ~= 0 then
         return
@@ -52,6 +60,7 @@ function UVAnimation:tick(part)
     self.data.delay = 0
 end
 
+---@class PositionFrame
 PositionFrame = {
     offset = {},
     rotation = {}
@@ -68,14 +77,21 @@ function PositionFrame:new(o, offset, rotation)
     return o
 end
 
+---@class PositionAnimation
 PositionAnimation = {
     tickRate = 1,
+
+    ---@type table<number, PositionFrame>
     frames = {}
 }
 
+---@class PartAnimation
 PartAnimation = {
-    uv = UVAnimation,
-    position = PositionAnimation
+    ---@type UVAnimation
+    uv = nil,
+
+    ---@type PositionAnimation
+    position = nil
 }
 
 function PartAnimation:new(o, uv, position)
@@ -93,8 +109,11 @@ function PartAnimation:tick(part)
     self.uv:tick(part)
 end
 
+---@class Animation
 Animation = {
     hook = "",
+
+    ---@type table<CustomModelPart, PartAnimation>
     parts = {}
 }
 
@@ -109,6 +128,7 @@ function Animation:new(o, hook, parts)
     return o
 end
 
+---@return boolean
 function Animation:tick()
     if not HookController.test(self.hook) then
         return false

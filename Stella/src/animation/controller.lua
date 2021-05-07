@@ -1,6 +1,7 @@
 --! @depends animation/animation
 
 AnimationController = {
+    ---@type table<number, Animation>
     animations = {
         -- Idle animation
         Animation:new(nil, "boolean:true", {
